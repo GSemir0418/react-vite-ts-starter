@@ -1,36 +1,52 @@
-pnpm create vite 
+### 1 项目搭建
 
-pnpm i sass
+- `pnpm create vite `
 
-reset.scss
+### 2 配置 sass
 
-```
+- `pnpm i sass`
+
+- shared/reset.scss
+
+```scss
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-*::before, *::after {
-    box-sizing: border-box;
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 a {
-    color:inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
-h1, h2, h3, h4, h5 {
-    font-weight: normal;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
 }
 
-button, input {
-    font:inherit;
+button,
+input {
+  font: inherit;
 }
 ```
 
-pnpm add react-router-dom
+- shared/vars.scss
 
-### 2.2.5 路由配置
+```scss
+:root {
+  --text-color: red;
+}
+```
+
+### 3 配置路由
 
 - 安装`react-router-dom`
 
@@ -38,7 +54,7 @@ pnpm add react-router-dom
 $ pnpm add react-router-dom
 ```
 
-- src下创建路由配置文件`src/config/routes`，利用react路由的懒加载——即对组件进行分割打包成多个chunk来减少一次性加载的资源大小，从而加快首屏渲染速度，提升用户体验
+- src 下创建路由配置文件`src/config/routes`，利用 react 路由的懒加载——即对组件进行分割打包成多个 chunk 来减少一次性加载的资源大小，从而加快首屏渲染速度，提升用户体验
 
 ```ts
 import { lazy } from "react";
@@ -65,35 +81,35 @@ const routes = [
 export default routes;
 ```
 
-- 封装`router.tsx`作为路由文件入口。由于路由是以懒加载的形式渲染的，所以切换页面时可能会产生延迟，因此使用`Suspense`组件将路由组件包裹，并在fallback中声明懒加载组件加载完成前做的事，优化整个页面的交互
-- 注意Route中的`component`属性改为了`element`
+- 封装`router.tsx`作为路由文件入口。由于路由是以懒加载的形式渲染的，所以切换页面时可能会产生延迟，因此使用`Suspense`组件将路由组件包裹，并在 fallback 中声明懒加载组件加载完成前做的事，优化整个页面的交互
+- 注意 Route 中的`component`属性改为了`element`
 
 ```tsx
-import { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
-import routes from "./config/routes";
+import { Suspense } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import routes from './config/routes'
 
 const Router = () => {
-  const myRoutes = routes.map((item) => {
+  const myRoutes = routes.map(item => {
     return (
       <Route key={item.path} path={item.path} element={<item.component />} />
-    );
-  });
+    )
+  })
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>{myRoutes}</Routes>
     </Suspense>
-  );
-};
+  )
+}
 
-export default Router;
+export default Router
 ```
 
 - `App.tsx`，注意使用`HashRouter`或`BrowserRouter`组件包裹`Router`
 
 ```tsx
-import Router from "./router";
-import { HashRouter, Link } from "react-router-dom";
+import Router from './router'
+import { HashRouter, Link } from 'react-router-dom'
 
 function App() {
   return (
@@ -105,18 +121,18 @@ function App() {
         <Router />
       </HashRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
 ```
 
-### 2.2.6 eslint与prettier配置
+### 4 eslint 与 prettier 配置
 
-- 安装eslint与prettier
+- 安装 eslint 与 prettier
 
 ```bash
-$ pnpm add -D @typescript-eslint/eslint-plugin eslint eslint-plugin-react @typescript-eslint/parser prettier 
+$ pnpm add -D @typescript-eslint/eslint-plugin eslint eslint-plugin-react @typescript-eslint/parser prettier
 ```
 
 - `.eslintrc.js`
@@ -301,9 +317,9 @@ module.exports = {
 }
 ```
 
-### 2.2.7 husky配置github提交代码规范
+### 5 husky 配置 github 提交代码规范
 
-- 安装husky
+- 安装 husky
 
 - > [Husky - Git hooks (typicode.github.io)](https://typicode.github.io/husky/#/?id=install)
 
@@ -317,7 +333,7 @@ $ npm set-script prepare "husky install"
 # 会在每次pnpm install时自动执行，神奇呀！
 ```
 
-- 安装pre-commit，在commit之前（`git add`后），代码会自动判断暂存区的代码是否符合规范，并对暂存区指定文件进行格式化
+- 安装 pre-commit，在 commit 之前（`git add`后），代码会自动判断暂存区的代码是否符合规范，并对暂存区指定文件进行格式化
 
 - > [okonet/lint-staged: 🚫💩 — Run linters on git staged files (github.com)](https://github.com/okonet/lint-staged#examples)
 
@@ -334,14 +350,14 @@ $ git add .husky/pre-commit
 
 ```json
 {
-	"*.{js,jsx,ts,tsx}": ["npx prettier --write", "npx eslint --fix"],
+  "*.{js,jsx,ts,tsx}": ["npx prettier --write", "npx eslint --fix"],
   // 暂无stylelint
-	"*.{css,less,scss}": ["npx prettier --write", "npx stylelint --fix"],
-	"*.{json,md}": ["npx prettier --write"]
+  "*.{css,less,scss}": ["npx prettier --write", "npx stylelint --fix"],
+  "*.{json,md}": ["npx prettier --write"]
 }
 ```
 
-- 安装`commitlint`，在pre-commit之后运行，检查commit的内容
+- 安装`commitlint`，在 pre-commit 之后运行，检查 commit 的内容
 
 - > [Local setup (commitlint.js.org)](https://commitlint.js.org/#/guides-local-setup)
 
@@ -353,4 +369,3 @@ $ echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > co
 # 添加commit-msg钩子，会在pre-commit之后运行，检查commit message的内容
 $ npx husky add .husky/commit-msg 'npx --no -- commitlint --edit $1'
 ```
-
