@@ -369,3 +369,21 @@ $ echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > co
 # 添加commit-msg钩子，会在pre-commit之后运行，检查commit message的内容
 $ npx husky add .husky/commit-msg 'npx --no -- commitlint --edit $1'
 ```
+
+6 stylelint
+
+pnpm i -D stylelint stylelint-config-standard postcss postcss-scss
+
+.stylelintrc.js
+
+```js
+{
+  "extends":["stylelint-config-standard"],
+    "plugins":["stylelint-order"],
+      "customSyntax":'postcss-scss',
+        "rules": {
+          "indentation": 2,
+            "no-descending-specificity":null,
+        }
+}
+```
