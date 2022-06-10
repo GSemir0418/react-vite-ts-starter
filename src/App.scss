@@ -1,0 +1,5 @@
+@import url(./shared/css/reset.scss);
+@import url(./shared/css/vars.scss);
+.App {
+  color: var(--test-text-color)
+}
