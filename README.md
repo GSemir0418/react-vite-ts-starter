@@ -502,7 +502,7 @@ export default defineConfig({
 
 ### 8 classnames
 
-`pnpm add classnames`
+- `pnpm add classnames`
 
 ```tsx
 import classnames from 'classnames'
@@ -513,4 +513,14 @@ const About = () => {
   )
 }
 export default About
+```
+
+- 修改 stylelint，支持蛇形命名(snake_case)
+
+```js
+rules: {
+	indentation: 2,
+	'no-descending-specificity': null,
+	'selector-class-pattern': '^([a-z][a-z0-9]*)(_[a-z0-9]+)*$',
+},
 ```
