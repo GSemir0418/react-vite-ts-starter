@@ -5,5 +5,6 @@ module.exports = {
   rules: {
     indentation: 2,
     'no-descending-specificity': null,
+    'selector-class-pattern': '^([a-z][a-z0-9]*)(_[a-z0-9]+)*$',
   },
 }
