@@ -524,3 +524,41 @@ rules: {
 	'selector-class-pattern': '^([a-z][a-z0-9]*)(_[a-z0-9]+)*$',
 },
 ```
+
+### 9 jest
+
+- ts-jest
+
+ts 或 tsx 文件的 jest 测试框架；需在 config 中的 transform 指定
+
+- [@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react) [@babel/preset-typescript](https://babeljs.io/docs/en/babel-preset-typescript) [@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)
+
+允许我们在测试中使用 ES6 模块，JSX 和 TypeScript。‎
+
+- Jest.setup.ts
+
+初始化 jest，负责一些被频繁使用的测试库的引入、配置工作；需在 config 中的 setupFilesAfterEnv 配置
+
+- Jest.config.ts
+
+jest 配置文件
+
+- jsdom
+
+是基于 JavaScript 的 ‎‎ 无图形交互界面的 ‎‎ 浏览器环境 ‎‎；需要在 config 中的 testEnvironment 配置
+
+- @testing-library/react
+
+赋予了在测试环境中渲染 react 组件的能力 ‎
+
+- @testing-library/jest-dom
+
+允许我们断言组件位于 DOM 中，并且包含某些文本和类
+
+- @testing-library/user-event
+
+允许我们以编程方式与渲染的组件进行交互
+
+- Identity-obj-proxy
+
+识别 CSS Modules 的类名，显示原始的类名；需要在 config 中的 moduleNameMapper 指定
