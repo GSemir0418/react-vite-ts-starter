@@ -527,38 +527,113 @@ rules: {
 
 ### 9 jest
 
+#### 9.1 测试库介绍
+
 - ts-jest
 
-ts 或 tsx 文件的 jest 测试框架；需在 config 中的 transform 指定
+  - ts 或 tsx 文件的 jest 测试框架；需在 config 中的 transform 指定，免去手动编译 TypeScript 文件后在进行测试
 
 - [@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react) [@babel/preset-typescript](https://babeljs.io/docs/en/babel-preset-typescript) [@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)
 
-允许我们在测试中使用 ES6 模块，JSX 和 TypeScript。‎
+  - 允许我们在测试中使用 ES6 模块，JSX 和 TypeScript。‎
 
-- Jest.setup.ts
+- jest.setup.ts
 
-初始化 jest，负责一些被频繁使用的测试库的引入、配置工作；需在 config 中的 setupFilesAfterEnv 配置
+  - 初始化 jest，负责一些被频繁使用的测试库的引入、配置工作；需在 config 中的 setupFilesAfterEnv 配置
 
-- Jest.config.ts
+- jest.config.ts
 
-jest 配置文件
+  - jest 配置文件
 
 - jsdom
 
-是基于 JavaScript 的 ‎‎ 无图形交互界面的 ‎‎ 浏览器环境 ‎‎；需要在 config 中的 testEnvironment 配置
+  - 是基于 JavaScript 的 ‎‎ 无图形交互界面的浏览器环境 ‎‎；需要在 config 中的 testEnvironment 配置
 
 - @testing-library/react
 
-赋予了在测试环境中渲染 react 组件的能力 ‎
+  - 赋予了在测试环境中渲染 react 组件的能力 ‎
 
 - @testing-library/jest-dom
 
-允许我们断言组件位于 DOM 中，并且包含某些文本和类
+  - 允许我们断言组件位于 DOM 中，并且包含某些文本和类
+
+  - 提供了一组自定义 jest 匹配器，可用于扩展 jest（例如：‎`toBeInTheDocument()`)
 
 - @testing-library/user-event
 
-允许我们以编程方式与渲染的组件进行交互
+  - 允许我们以编程方式与渲染的组件进行交互
 
-- Identity-obj-proxy
+- identity-obj-proxy
+  - 识别 CSS Modules 的类名，显示原始的类名；需要在 config 中的 moduleNameMapper 指定
 
-识别 CSS Modules 的类名，显示原始的类名；需要在 config 中的 moduleNameMapper 指定
+#### 9.2 安装 jest、jsdom 环境及 css modules 支持
+
+```shell
+pnpm install -D jest ts-jest jest-environment-jsdom identity-obj-proxy
+```
+
+#### 9.3 安装 react-testing-librar
+
+```
+pnpm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event
+```
+
+#### 9.4 记得在生产环境中将测试文件排除在 ts 检查范围之外
+
+```json
+// tsconfig.prod.json
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "./src/__tests__/**",
+    "./src/__mocks__/**",
+    "./src/test-utils"
+  ]
+}
+
+// .eslintrc.js
+// 排除测试文件的ts检查
+ignorePatterns: ['**/*.test.tsx', '**/*.test.ts'],
+
+// Package.json
+-"build": "tsc && vite build",
++"build": "tsc -p tsconfig.prod.json && vite build",
+```
+
+#### 9.3 在 package.json 中添加测试命令
+
+```json
+// package.json
++  "test": "NODE_ENV=test jest"
+```
+
+#### 9.4 配置 jest
+
+```json
+// jest.config.json
+{
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "testEnvironment": "jsdom",
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?|ts?)$",
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+  "moduleNameMapper": {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+  }
+}
+```
+
+#### 9.5 测试 Button 组件
+
+```tsx
+// src/__test__/Button.test.tsx
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import Button from '../components/button/Button'
+
+it('renders correctly', () => {
+  const { container } = render(<Button>Hello World</Button>)
+  expect(container.firstChild).toMatchSnapshot()
+})
+```
